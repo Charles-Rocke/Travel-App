@@ -5,24 +5,32 @@ const initialItems = [
   { id: 3, description: "Charger", quantity: 1, packed: true },
 ];
 
+// default App component
 export default function App() {
+  // moved ites state up from form
+  const [items, setItems] = useState([]);
+  // handle add items
+  function handleAddItems(item) {
+    setItems((items) => [...items, item]);
+  }
+
   return (
     <div className="app">
       <Logo />
-      <Form />
-      <PackingList />
+      <Form onAddItems={handleAddItems} />
+      <PackingList items={items} />
       <Stats />
     </div>
   );
 }
 
-//
+// Logo commponent
 function Logo() {
   return <h1>🌴Far Away💼</h1>;
 }
 
-//
-function Form() {
+// Form component
+function Form({ onAddItems }) {
   /* Controlled elements:
     1. define a piece of state
     2. use that piece of state oin the element that we want to control
@@ -32,6 +40,7 @@ function Form() {
   const [description, setDescription] = useState("");
   //state for quantity
   const [quantity, setQuantity] = useState(1);
+
   // event handler
   function handleSubmit(event) {
     // disable page reload on submit
@@ -44,6 +53,7 @@ function Form() {
     const newItem = { description, quantity, packed: false, id: Date.now() };
     console.log(newItem);
 
+    onAddItems(newItem);
     // setDescription to itial state
     setDescription("");
     setQuantity(1);
@@ -73,12 +83,12 @@ function Form() {
   );
 }
 
-//
-function PackingList() {
+// Packing List component
+function PackingList({ items }) {
   return (
     <div className="list">
       <ul>
-        {initialItems.map((item) => (
+        {items.map((item) => (
           <Item item={item} key={item.id} />
         ))}
       </ul>
@@ -86,7 +96,7 @@ function PackingList() {
   );
 }
 
-// item component
+// Item component
 function Item({ item }) {
   return (
     <li>
@@ -99,7 +109,7 @@ function Item({ item }) {
   );
 }
 
-//
+// Stats component
 function Stats() {
   return (
     <footer className="stats">

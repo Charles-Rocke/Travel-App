@@ -100,10 +100,26 @@ function Form({ onAddItems }) {
 
 // Packing List component
 function PackingList({ items, onDeleteItem, onToggleItem }) {
+  // sort default is by input
+  const [sortBy, setSortBy] = useState("input");
+
+  let sortedItems;
+
+  if (sortBy === "input") sortedItems = items;
+
+  if (sortBy === "alphabetical")
+    sortedItems = items
+      .slice()
+      .sort((a, b) => a.description.localeCompare(b.description));
+
+  if (sortBy === "packed")
+    sortedItems = items
+      .slice()
+      .sort((a, b) => Number(a.packed) - Number(b.packed));
   return (
     <div className="list">
       <ul>
-        {items.map((item) => (
+        {sortedItems.map((item) => (
           <Item
             item={item}
             key={item.id}
@@ -112,6 +128,18 @@ function PackingList({ items, onDeleteItem, onToggleItem }) {
           />
         ))}
       </ul>
+
+      {/* sort and clear */}
+      <div className="actions">
+        <select
+          value={sortBy}
+          onChange={(event) => setSortBy(event.target.value)}
+        >
+          <option value="input">Sort by input order</option>
+          <option value="alphabetical">Sort Alphabetically</option>
+          <option value="packed">Sort by packed status</option>
+        </select>
+      </div>
     </div>
   );
 }

@@ -5,6 +5,15 @@ export default function App() {
   // moved ites state up from form
   const [items, setItems] = useState([]);
 
+  // clear list function
+  function handleClearList() {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete all items?"
+    );
+
+    if (confirmed) setItems([]);
+  }
+
   // handle add items
   function handleAddItems(item) {
     setItems((items) => [...items, item]);
@@ -33,6 +42,7 @@ export default function App() {
         items={items}
         onDeleteItem={handleDeleteItem}
         onToggleItem={handleToggleItem}
+        onClearList={handleClearList}
       />
       <Stats items={items} />
     </div>
@@ -99,7 +109,7 @@ function Form({ onAddItems }) {
 }
 
 // Packing List component
-function PackingList({ items, onDeleteItem, onToggleItem }) {
+function PackingList({ items, onDeleteItem, onToggleItem, onClearList }) {
   // sort default is by input
   const [sortBy, setSortBy] = useState("input");
 
@@ -139,6 +149,7 @@ function PackingList({ items, onDeleteItem, onToggleItem }) {
           <option value="alphabetical">Sort Alphabetically</option>
           <option value="packed">Sort by packed status</option>
         </select>
+        <button onClick={onClearList}>Clear List</button>
       </div>
     </div>
   );
